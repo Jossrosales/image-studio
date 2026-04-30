@@ -1,0 +1,212 @@
+<section class="space-y-6">
+  <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+    <div>
+      <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Módulo 02</div>
+      <h2 class="mt-1 text-2xl font-semibold text-slate-950">Resultados de diseño</h2>
+      <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Ahora este módulo ya maneja un historial real de cargas. Cada Excel puede combinarse con lo existente o reemplazarlo por completo.</p>
+    </div>
+    <button type="button" (click)="back.emit()" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">← Volver al dashboard</button>
+  </div>
+
+  <div *ngIf="loading" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">Cargando historial guardado...</div>
+  <div *ngIf="saving" class="rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3 text-sm text-cyan-700">Guardando historial en servidor...</div>
+  <div *ngIf="notice" class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ notice }}</div>
+  <div *ngIf="error" class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ error }}</div>
+
+  <section class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+    <div class="space-y-6 rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+      <div class="space-y-3">
+        <div>
+          <h3 class="text-lg font-semibold text-slate-950">Carga de Excel</h3>
+          <p class="text-sm text-slate-500">Sube un archivo con estas columnas exactas: fecha inicio, fecha fin, persona, fecha completada, tags y story points.</p>
+        </div>
+
+        <div class="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+          <div class="text-sm font-medium text-slate-900">Modo de carga</div>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <button type="button" (click)="onUploadModeChange('merge')" [class]="uploadMode === 'merge' ? 'rounded-2xl border border-slate-950 bg-slate-950 px-4 py-3 text-left text-white shadow-[0_20px_50px_rgba(15,23,42,0.18)]' : 'rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-700 transition hover:border-slate-300 hover:bg-slate-50'">
+              <div class="text-sm font-semibold">Combinar</div>
+              <div class="mt-1 text-xs" [class]="uploadMode === 'merge' ? 'text-white/70' : 'text-slate-500'">Agrega esta carga al historial actual.</div>
+            </button>
+            <button type="button" (click)="onUploadModeChange('replace')" [class]="uploadMode === 'replace' ? 'rounded-2xl border border-slate-950 bg-slate-950 px-4 py-3 text-left text-white shadow-[0_20px_50px_rgba(15,23,42,0.18)]' : 'rounded-2xl border border-slate-200 bg-white px-4 py-3 text-left text-slate-700 transition hover:border-slate-300 hover:bg-slate-50'">
+              <div class="text-sm font-semibold">Reemplazar</div>
+              <div class="mt-1 text-xs" [class]="uploadMode === 'replace' ? 'text-white/70' : 'text-slate-500'">Borra el historial actual y deja solo esta carga.</div>
+            </button>
+          </div>
+        </div>
+
+        <label
+          class="flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed px-6 py-8 text-center transition"
+          [class]="dragActive ? 'flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-400 bg-cyan-50 px-6 py-8 text-center transition' : 'flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-slate-400 hover:bg-white'"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+        >
+          <input type="file" accept=".xlsx,.xls,.csv" class="hidden" (change)="onFileInput($event)">
+          <div class="mb-3 text-3xl">📊</div>
+          <p class="text-sm font-medium text-slate-800">Arrastra el Excel o haz click para subirlo</p>
+          <p class="mt-1 text-xs text-slate-500">Formatos: XLSX, XLS, CSV · modo actual: {{ lastUploadModeLabel }}</p>
+        </label>
+      </div>
+
+      <div class="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div class="text-sm font-medium text-slate-900">Último archivo cargado</div>
+            <div class="mt-1 text-sm text-slate-600">{{ uploadedFileName || 'Todavía no hay archivo guardado' }}</div>
+            <div *ngIf="uploadedAt" class="mt-1 text-xs text-slate-400">Última carga: {{ uploadedAt | date:'dd/MM/yyyy · h:mm a' }}</div>
+          </div>
+          <button *ngIf="entries.length" type="button" (click)="clearData()" [disabled]="saving" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50">Limpiar datos</button>
+        </div>
+      </div>
+
+      <div class="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div class="text-sm font-medium text-slate-900">Filtro por persona</div>
+            <div class="text-xs text-slate-500">Desde UX, esto debería ser el control principal para leer desempeño individual.</div>
+          </div>
+          <select [ngModel]="selectedPerson" (ngModelChange)="onPersonChange($event)" class="min-w-60 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400">
+            <option value="all">Todo el equipo</option>
+            <option *ngFor="let person of people" [value]="person">{{ person }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+        <div class="text-sm font-medium text-slate-900">Columnas requeridas</div>
+        <div class="mt-3 grid gap-2 text-xs text-slate-600 sm:grid-cols-2">
+          <div class="rounded-2xl bg-white px-3 py-2">Fecha inicio</div>
+          <div class="rounded-2xl bg-white px-3 py-2">Fecha fin</div>
+          <div class="rounded-2xl bg-white px-3 py-2">Persona</div>
+          <div class="rounded-2xl bg-white px-3 py-2">Fecha completada</div>
+          <div class="rounded-2xl bg-white px-3 py-2">Tags</div>
+          <div class="rounded-2xl bg-white px-3 py-2">Story points</div>
+        </div>
+        <p class="mt-3 text-xs leading-5 text-slate-500">Regla actual: una fila equivale a una tarea. Si tiene <strong>fecha completada</strong>, cuenta como realizada. Si esa fecha es mayor que <strong>fecha fin</strong>, cuenta como fuera de tiempo.</p>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article *ngFor="let card of statsCards" class="rounded-[28px] border border-slate-950 bg-slate-950 p-5 text-white shadow-[0_20px_50px_rgba(15,23,42,0.18)] transition duration-200 hover:-translate-y-0.5 hover:bg-slate-900 hover:shadow-[0_18px_45px_rgba(15,23,42,0.22)]">
+          <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-white/60">{{ card.label }}</div>
+          <div class="mt-3 text-3xl font-semibold text-white">{{ card.value }}</div>
+          <p class="mt-2 text-sm text-white/70">{{ card.note }}</p>
+        </article>
+      </section>
+
+      <section class="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <article class="rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+          <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-slate-950">Historial del mes</h3>
+              <p class="text-sm text-slate-500">Ahora solo muestra lo cargado en el mes seleccionado. Por defecto intenta abrir en el mes actual.</p>
+            </div>
+            <div class="text-sm text-slate-600">Vista: <span class="font-medium text-slate-950">{{ currentPersonLabel }}</span></div>
+          </div>
+
+          <div class="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-[1fr_180px_180px]">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+              Filtra el bloque por un período específico sin mezclar meses.
+            </div>
+            <select [ngModel]="selectedMonth" (ngModelChange)="onMonthChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400">
+              <option *ngFor="let month of monthOptions" [ngValue]="month.value">{{ month.label }}</option>
+            </select>
+            <select [ngModel]="selectedYear" (ngModelChange)="onYearChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400">
+              <option *ngFor="let year of availableYears" [ngValue]="year">{{ year }}</option>
+            </select>
+          </div>
+
+          <div *ngIf="periodSummary; else emptyHistory" class="mt-5 space-y-3">
+            <div class="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+              <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <div class="text-sm font-semibold capitalize text-slate-950">{{ periodSummary.monthLabel }}</div>
+                  <div class="mt-1 text-xs text-slate-500">{{ periodSummary.tasks }} registros · {{ periodSummary.completedTasks }} tareas realizadas · {{ periodSummary.lateTasks }} fuera de tiempo</div>
+                </div>
+                <div class="w-full max-w-xs rounded-full bg-slate-200">
+                  <div class="h-2 rounded-full bg-cyan-500" [style.width.%]="totalStoryPoints ? (periodSummary.storyPoints / totalStoryPoints) * 100 : 0"></div>
+                </div>
+              </div>
+              <div class="mt-4 grid gap-3 sm:grid-cols-4">
+                <div class="rounded-2xl bg-white px-3 py-3 text-sm text-slate-700"><div class="text-[11px] uppercase tracking-[0.14em] text-slate-400">Story points</div><div class="mt-2 text-xl font-semibold text-slate-950">{{ periodSummary.storyPoints }}</div></div>
+                <div class="rounded-2xl bg-white px-3 py-3 text-sm text-slate-700"><div class="text-[11px] uppercase tracking-[0.14em] text-slate-400">Hechas</div><div class="mt-2 text-xl font-semibold text-slate-950">{{ periodSummary.completedTasks }}</div></div>
+                <div class="rounded-2xl bg-white px-3 py-3 text-sm text-slate-700"><div class="text-[11px] uppercase tracking-[0.14em] text-slate-400">Tarde</div><div class="mt-2 text-xl font-semibold text-slate-950">{{ periodSummary.lateTasks }}</div></div>
+                <div class="rounded-2xl bg-white px-3 py-3 text-sm text-slate-700"><div class="text-[11px] uppercase tracking-[0.14em] text-slate-400">Tags</div><div class="mt-2 text-xl font-semibold text-slate-950">{{ periodSummary.tags }}</div></div>
+              </div>
+            </div>
+          </div>
+          <ng-template #emptyHistory>
+            <div class="mt-5 flex min-h-72 items-center justify-center rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-6 text-center text-sm text-slate-500">No hay datos cargados para el mes y año seleccionados.</div>
+          </ng-template>
+        </article>
+
+        <div class="space-y-6">
+          <article class="rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="text-lg font-semibold text-slate-950">Historial de cargas</h3>
+                <p class="mt-1 text-sm text-slate-500">Aquí ya puedes ver cada upload guardado con fecha, cantidad de registros y si fue combinación o reemplazo.</p>
+              </div>
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">{{ totalUploads }} cargas</div>
+            </div>
+            <div *ngIf="uploads.length; else emptyUploads" class="mt-4 space-y-3">
+              <div *ngFor="let upload of uploads" class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-700">
+                <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <div class="font-medium text-slate-950">{{ upload.fileName }}</div>
+                    <div class="mt-1 text-xs text-slate-500">{{ upload.uploadedAt | date:'dd/MM/yyyy · h:mm a' }}</div>
+                  </div>
+                  <div class="flex flex-wrap gap-2 text-xs">
+                    <span class="rounded-full border px-3 py-1" [class]="upload.mode === 'merge' ? 'border-cyan-200 bg-cyan-50 text-cyan-700' : 'border-amber-200 bg-amber-50 text-amber-700'">{{ upload.mode === 'merge' ? 'Combinado' : 'Reemplazo' }}</span>
+                    <span class="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600">{{ upload.entryCount }} registros</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-template #emptyUploads>
+              <div class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">Todavía no hay cargas guardadas.</div>
+            </ng-template>
+          </article>
+
+          <article class="rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+            <h3 class="text-lg font-semibold text-slate-950">Resumen de personas</h3>
+            <p class="mt-1 text-sm text-slate-500">Sirve para detectar rápido quién tiene más carga o más puntos acumulados.</p>
+            <div *ngIf="topPerformer" class="mt-4 rounded-[24px] border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
+              <div class="font-medium">Mejor acumulado en story points</div>
+              <div class="mt-2 text-xl font-semibold">{{ topPerformer!.person }}</div>
+              <div class="mt-1 text-sm">{{ topPerformer!.points }} story points</div>
+            </div>
+            <div class="mt-4 space-y-3" *ngIf="people.length; else emptyPeople">
+              <div *ngFor="let person of people" class="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+                <div>
+                  <div class="font-medium text-slate-900">{{ person }}</div>
+                  <div class="text-xs text-slate-500">{{ getPersonEntryCount(person) }} registros</div>
+                </div>
+                <button type="button" (click)="onPersonChange(person)" class="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-100">Ver resultado</button>
+              </div>
+            </div>
+            <ng-template #emptyPeople>
+              <div class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">Todavía no hay personas cargadas.</div>
+            </ng-template>
+          </article>
+
+          <article class="rounded-[32px] border border-white/70 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
+            <h3 class="text-lg font-semibold text-slate-950">Tags detectados</h3>
+            <p class="mt-1 text-sm text-slate-500">A nivel visual, conviene ver los tags como módulos cortos y contables.</p>
+            <div *ngIf="tagSummary.length; else emptyTags" class="mt-4 flex flex-wrap gap-3">
+              <div *ngFor="let tag of tagSummary" class="rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm text-cyan-800">
+                <span class="font-medium">{{ tag.name }}</span>
+                <span class="ml-2 rounded-full bg-white px-2 py-0.5 text-xs text-cyan-700">{{ tag.count }}</span>
+              </div>
+            </div>
+            <ng-template #emptyTags>
+              <div class="mt-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">Los tags aparecerán cuando lleguen en el Excel.</div>
+            </ng-template>
+          </article>
+        </div>
+      </section>
+    </div>
+  </section>
+</section>

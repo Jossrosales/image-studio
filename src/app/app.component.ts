@@ -1,379 +1,180 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
+import { ImageStudioComponent } from './image-studio.component';
+import { ResultsDesignComponent } from './results-design.component';
 
-type Mode = 'text-to-image' | 'image-to-image';
-type AspectRatio = '1:1' | '4:3' | '3:4' | '16:9' | '9:16';
-type StylePreset = 'auto' | 'product' | 'cartoon' | 'cinematic' | 'ui-concept' | 'minimal';
+type ModuleStatus = 'Activo' | 'Próximamente' | 'En diseño';
+type ModuleId =
+  | 'image-studio'
+  | 'resultados-diseno'
+  | 'brand-kit'
+  | 'assets'
+  | 'prompt-lab'
+  | 'ui-review'
+  | 'motion-board'
+  | 'sistema';
 
-type GenerateResponse = {
-  imageUrl: string;
-  provider: string;
-  model: string;
-  promptUsed?: string;
+type DashboardModule = {
+  id: ModuleId;
+  name: string;
+  subtitle: string;
+  description: string;
+  status: ModuleStatus;
+  icon: string;
+  accent: string;
+  metric: string;
+  updatedLabel: string;
 };
 
-type HistoryItem = GenerateResponse & {
-  id: string;
-  mode: Mode;
-  style: StylePreset;
-  aspectRatio: AspectRatio;
-  prompt: string;
-};
-
-type StoredState = {
-  mode: Mode;
-  prompt: string;
-  aspectRatio: AspectRatio | null;
-  style: StylePreset | null;
-  referencePreview: string | null;
-  result: GenerateResponse | null;
-  history: HistoryItem[];
-  selectedIdea: string;
-  selectedTweaks: string[];
-};
-
-const STORAGE_KEY = 'image-studio-state-v1';
-const promptIdeas = [
-  'Una banana 3D cartoon sobre fondo blanco, glossy, suave y simpática.',
-  'Pantalla hero para app de diseño con estética premium, gradientes suaves y mockup flotante.',
-  'Ilustración isométrica de dashboard SaaS con look limpio, moderno y profesional.',
-  'Mascota minimalista para startup AI, amigable, memorable y usable como ícono.',
-] as const;
-
-const styleDescriptions: Record<StylePreset, string> = {
-  auto: 'Deja que el prompt mande.',
-  product: 'Más limpio, luz de estudio, fondo controlado.',
-  cartoon: 'Formas suaves, color más amable, look divertido.',
-  cinematic: 'Más dramatismo, contraste y composición hero.',
-  'ui-concept': 'Útil para concepts de producto y branding.',
-  minimal: 'Menos ruido visual, foco en la forma principal.',
-};
-
-const quickTweaks = [
-  'fondo blanco puro',
-  'sombras suaves',
-  'composición centrada',
-  'detalle alto',
-  'acabado glossy',
-  'estética premium',
-] as const;
-
-function readStoredState(): StoredState | null {
-  if (typeof localStorage === 'undefined') return null;
-
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as StoredState) : null;
-  } catch {
-    return null;
-  }
-}
+const dashboardModules: DashboardModule[] = [
+  {
+    id: 'image-studio',
+    name: 'Image Studio',
+    subtitle: 'Generación visual',
+    description: 'Crea imágenes, conceptos y variaciones desde prompts con un flujo claro.',
+    status: 'Activo',
+    icon: '✨',
+    accent: 'from-violet-100 via-white to-orange-50',
+    metric: 'Módulo 01',
+    updatedLabel: 'Disponible ahora',
+  },
+  {
+    id: 'resultados-diseno',
+    name: 'Resultados de diseño',
+    subtitle: 'Entregables visuales',
+    description: 'Dashboard de métricas por persona con carga de Excel, filtros e historial mensual.',
+    status: 'Activo',
+    icon: '📁',
+    accent: 'from-sky-100 via-white to-indigo-50',
+    metric: 'Módulo 02',
+    updatedLabel: 'Disponible ahora',
+  },
+  {
+    id: 'brand-kit',
+    name: 'Brand Kit',
+    subtitle: 'Sistema de marca',
+    description: 'Centraliza logos, colores, tipografías y lineamientos visuales del producto.',
+    status: 'En diseño',
+    icon: '🎨',
+    accent: 'from-pink-100 via-white to-rose-50',
+    metric: 'Tokens visuales',
+    updatedLabel: 'Pendiente de poblar',
+  },
+  {
+    id: 'assets',
+    name: 'Assets',
+    subtitle: 'Recursos del sistema',
+    description: 'Agrupa íconos, mockups, plantillas y piezas reutilizables para producción.',
+    status: 'En diseño',
+    icon: '🧩',
+    accent: 'from-amber-100 via-white to-orange-50',
+    metric: 'Biblioteca base',
+    updatedLabel: 'Pendiente de poblar',
+  },
+  {
+    id: 'prompt-lab',
+    name: 'Prompt Lab',
+    subtitle: 'Exploración creativa',
+    description: 'Prueba direcciones visuales, variantes de copy y recetas reutilizables de prompts.',
+    status: 'Próximamente',
+    icon: '🧪',
+    accent: 'from-emerald-100 via-white to-teal-50',
+    metric: 'Laboratorio',
+    updatedLabel: 'Próxima iteración',
+  },
+  {
+    id: 'ui-review',
+    name: 'UI Review',
+    subtitle: 'Control de interfaces',
+    description: 'Reserva este módulo para auditorías UX/UI, feedback y control de consistencia.',
+    status: 'En diseño',
+    icon: '🖥️',
+    accent: 'from-slate-100 via-white to-zinc-50',
+    metric: 'Checklist UX',
+    updatedLabel: 'Pendiente de poblar',
+  },
+  {
+    id: 'motion-board',
+    name: 'Motion Board',
+    subtitle: 'Animación y presentación',
+    description: 'Ideal para futuras transiciones, microinteracciones y direction visual animada.',
+    status: 'Próximamente',
+    icon: '🎬',
+    accent: 'from-fuchsia-100 via-white to-violet-50',
+    metric: 'Storyboard',
+    updatedLabel: 'Próxima iteración',
+  },
+  {
+    id: 'sistema',
+    name: 'Sistema',
+    subtitle: 'Configuración general',
+    description: 'Ubica aquí ajustes globales, proveedores, estados de módulos y preferencias.',
+    status: 'En diseño',
+    icon: '⚙️',
+    accent: 'from-cyan-100 via-white to-slate-50',
+    metric: 'Control central',
+    updatedLabel: 'Pendiente de poblar',
+  },
+];
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ImageStudioComponent, ResultsDesignComponent],
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  readonly promptIdeas = promptIdeas;
-  readonly quickTweaks = quickTweaks;
-  readonly styles = ['auto', 'product', 'cartoon', 'cinematic', 'ui-concept', 'minimal'] as const;
-  readonly aspectRatios = ['1:1', '4:3', '3:4', '16:9', '9:16'] as const;
-  readonly styleDescriptions = styleDescriptions;
+  readonly modules = dashboardModules;
+  activeModule: ModuleId = 'sistema';
+  currentView: 'dashboard' | 'image-studio' | 'resultados-diseno' = 'dashboard';
 
-  mode: Mode = 'text-to-image';
-  prompt: string = promptIdeas[0];
-  aspectRatio: AspectRatio | null = '1:1';
-  style: StylePreset | null = 'cartoon';
-  referenceFile: File | null = null;
-  referencePreview: string | null = null;
-  result: GenerateResponse | null = null;
-  history: HistoryItem[] = [];
-  loading = false;
-  error: string | null = null;
-  notice: string | null = null;
-  selectedIdea: string = promptIdeas[0];
-  selectedTweaks: string[] = [];
-  isDragActive = false;
-
-  constructor(private readonly http: HttpClient) {
-    const stored = readStoredState();
-    if (!stored) return;
-
-    this.mode = stored.mode;
-    this.prompt = stored.prompt;
-    this.aspectRatio = stored.aspectRatio;
-    this.style = stored.style;
-    this.referencePreview = stored.referencePreview;
-    this.result = stored.result;
-    this.history = stored.history;
-    this.selectedIdea = stored.selectedIdea;
-    this.selectedTweaks = stored.selectedTweaks;
+  get activeModuleData() {
+    return this.modules.find((module) => module.id === this.activeModule) ?? this.modules[0];
   }
 
-  get canSubmit() {
-    if (!this.prompt.trim()) return false;
-    if (this.mode === 'image-to-image' && !this.referenceFile && !this.referencePreview) return false;
-    return true;
+  get activeModuleCount() {
+    return this.modules.length;
   }
 
-  get effectiveStyle(): StylePreset {
-    return this.style ?? 'auto';
+  get activeStatusCount() {
+    return this.modules.filter((module) => module.status === 'Activo').length;
   }
 
-  get effectiveAspectRatio(): AspectRatio {
-    return this.aspectRatio ?? '1:1';
-  }
-
-  get enhancedPrompt() {
-    const styleParts: Record<StylePreset, string> = {
-      auto: '',
-      product: 'clean product render, studio lighting, polished composition',
-      cartoon: 'cute cartoon-style 3D render, rounded shapes, playful look',
-      cinematic: 'cinematic lighting, stronger contrast, premium composition',
-      'ui-concept': 'design concept render, polished, product-focused, modern visual system',
-      minimal: 'minimal composition, reduced clutter, clean negative space',
-    };
-
-    return [this.prompt.trim(), this.style ? styleParts[this.style] : ''].filter(Boolean).join(', ');
-  }
-
-  persistState(next: Partial<StoredState>) {
-    const current: StoredState = {
-      mode: this.mode,
-      prompt: this.prompt,
-      aspectRatio: this.aspectRatio,
-      style: this.style,
-      referencePreview: this.referencePreview,
-      result: this.result,
-      history: this.history,
-      selectedIdea: this.selectedIdea,
-      selectedTweaks: this.selectedTweaks,
-      ...next,
-    };
-
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
-  }
-
-  chipClasses(isActive: boolean, tone: 'orange' | 'dark' = 'dark') {
-    if (isActive) {
-      return tone === 'orange'
-        ? 'border border-orange-500 bg-orange-500 text-white shadow-[0_0_0_3px_rgba(249,115,22,0.18)]'
-        : 'border border-slate-950 bg-slate-950 text-white shadow-[0_0_0_3px_rgba(15,23,42,0.12)]';
+  moduleStatusClasses(status: ModuleStatus) {
+    switch (status) {
+      case 'Activo':
+        return 'border-emerald-200 bg-emerald-50 text-emerald-700';
+      case 'Próximamente':
+        return 'border-amber-200 bg-amber-50 text-amber-700';
+      default:
+        return 'border-slate-200 bg-slate-100 text-slate-600';
     }
-
-    return 'border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-100 active:scale-[0.99]';
   }
 
-  chipIconClasses(isActive: boolean) {
-    return isActive
-      ? 'border-white/70 bg-white/15 text-white'
-      : 'border-slate-300 bg-white text-transparent';
+  moduleCardClasses(moduleId: ModuleId) {
+    return this.activeModule === moduleId
+      ? 'border-slate-950 bg-slate-950 text-white shadow-[0_20px_50px_rgba(15,23,42,0.18)]'
+      : 'border border-white/70 bg-white/85 text-slate-900 shadow-[0_10px_40px_rgba(15,23,42,0.06)] hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-[0_18px_45px_rgba(15,23,42,0.1)]';
   }
 
-  onPromptChange(nextPrompt: string) {
-    this.prompt = nextPrompt;
-    this.selectedIdea = '';
-    this.persistState({ prompt: nextPrompt, selectedIdea: '' });
-  }
+  openModule(moduleId: ModuleId) {
+    this.activeModule = moduleId;
 
-  selectIdea(idea: string) {
-    this.prompt = idea;
-    this.selectedIdea = idea;
-    this.selectedTweaks = [];
-    this.persistState({ prompt: idea, selectedIdea: idea, selectedTweaks: [] });
-    this.notice = 'Idea rápida aplicada.';
-  }
-
-  selectStyle(preset: StylePreset) {
-    const nextStyle = this.style === preset ? null : preset;
-    this.style = nextStyle;
-    this.persistState({ style: nextStyle });
-    this.notice = nextStyle ? `Estilo ${preset} seleccionado.` : `Estilo ${preset} deseleccionado.`;
-  }
-
-  selectAspectRatio(ratio: AspectRatio) {
-    const nextRatio = this.aspectRatio === ratio ? null : ratio;
-    this.aspectRatio = nextRatio;
-    this.persistState({ aspectRatio: nextRatio });
-    this.notice = nextRatio ? `Formato ${ratio} seleccionado.` : `Formato ${ratio} deseleccionado.`;
-  }
-
-  toggleTweak(tweak: string) {
-    this.selectedIdea = '';
-    const isActive = this.selectedTweaks.includes(tweak);
-    const nextTweaks = isActive ? this.selectedTweaks.filter((item) => item !== tweak) : [...this.selectedTweaks, tweak];
-    const lowered = this.prompt.toLowerCase();
-    const tweakLower = tweak.toLowerCase();
-
-    this.prompt = isActive
-      ? (() => {
-          const index = lowered.indexOf(tweakLower);
-          if (index === -1) return this.prompt;
-          const before = this.prompt.slice(0, index).replace(/[,.\s]+$/, '');
-          const after = this.prompt.slice(index + tweak.length).replace(/^[,.\s]+/, '');
-          return [before, after].filter(Boolean).join(', ');
-        })()
-      : this.prompt.trim()
-        ? `${this.prompt.replace(/[,\.\s]+$/, '')}, ${tweak}`
-        : tweak;
-
-    this.selectedTweaks = nextTweaks;
-    this.persistState({ prompt: this.prompt, selectedTweaks: nextTweaks, selectedIdea: '' });
-    this.notice = isActive ? `Quité: ${tweak}` : `Añadí: ${tweak}`;
-  }
-
-  onModeChange(mode: Mode) {
-    this.mode = mode;
-    this.result = null;
-    this.error = null;
-    this.persistState({ mode, result: null });
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-    const file = event.dataTransfer?.files?.[0] ?? null;
-    this.onFileChange(file);
-  }
-
-  onFileInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.onFileChange(input.files?.[0] ?? null);
-  }
-
-  onFileChange(file: File | null) {
-    this.referenceFile = file;
-    this.result = null;
-    this.error = null;
-
-    if (!file) {
-      this.referencePreview = null;
-      this.persistState({ referencePreview: null, result: null });
+    if (moduleId === 'image-studio') {
+      this.currentView = 'image-studio';
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.referencePreview = typeof reader.result === 'string' ? reader.result : null;
-      this.persistState({ referencePreview: this.referencePreview, result: null });
-    };
-    reader.readAsDataURL(file);
-  }
-
-  clearAll() {
-    this.prompt = '';
-    this.referenceFile = null;
-    this.referencePreview = null;
-    this.result = null;
-    this.selectedIdea = '';
-    this.selectedTweaks = [];
-    this.error = null;
-    this.notice = 'Campos limpiados.';
-    this.persistState({
-      prompt: '',
-      referencePreview: null,
-      selectedIdea: '',
-      selectedTweaks: [],
-      result: null,
-    });
-  }
-
-  async copyPrompt() {
-    try {
-      await navigator.clipboard.writeText(this.enhancedPrompt || this.prompt);
-      this.notice = 'Prompt copiado.';
-    } catch {
-      this.error = 'No pude copiar el prompt automáticamente.';
+    if (moduleId === 'resultados-diseno') {
+      this.currentView = 'resultados-diseno';
+      return;
     }
+
+    this.currentView = 'dashboard';
   }
 
-  async downloadResult() {
-    if (!this.result?.imageUrl) return;
-    const link = document.createElement('a');
-    link.href = this.result.imageUrl;
-    link.download = `image-studio-${Date.now()}.png`;
-    link.target = '_blank';
-    link.rel = 'noreferrer';
-    link.click();
-  }
-
-  async reuseHistory(item: HistoryItem) {
-    this.prompt = item.prompt;
-    this.mode = item.mode;
-    this.style = item.style;
-    this.aspectRatio = item.aspectRatio;
-    this.result = {
-      imageUrl: item.imageUrl,
-      provider: item.provider,
-      model: item.model,
-      promptUsed: item.promptUsed,
-    };
-    this.persistState({
-      prompt: item.prompt,
-      mode: item.mode,
-      style: item.style,
-      aspectRatio: item.aspectRatio,
-      result: this.result,
-    });
-    this.notice = 'Generación recuperada del historial.';
-  }
-
-  async handleGenerate() {
-    if (!this.canSubmit) return;
-
-    this.loading = true;
-    this.error = null;
-    this.notice = null;
-
-    try {
-      const body = new FormData();
-      body.append('prompt', this.prompt.trim());
-      body.append('mode', this.mode);
-      body.append('style', this.effectiveStyle);
-      body.append('aspectRatio', this.effectiveAspectRatio);
-      if (this.referenceFile) body.append('reference', this.referenceFile);
-
-      const response = await firstValueFrom(this.http.post<GenerateResponse>('/api/generate', body));
-      this.result = response;
-
-      const nextHistory: HistoryItem[] = [
-        {
-          id: crypto.randomUUID(),
-          ...response,
-          mode: this.mode,
-          style: this.effectiveStyle,
-          aspectRatio: this.effectiveAspectRatio,
-          prompt: this.prompt.trim(),
-        },
-        ...this.history,
-      ].slice(0, 8);
-
-      this.history = nextHistory;
-      this.persistState({ result: response, history: nextHistory, style: this.style, aspectRatio: this.aspectRatio });
-      this.notice = 'Imagen generada.';
-    } catch (error: unknown) {
-      const message =
-        typeof error === 'object' && error && 'error' in error && typeof (error as { error?: { error?: string } }).error?.error === 'string'
-          ? (error as { error: { error: string } }).error.error
-          : 'No pude generar la imagen.';
-      this.error = message;
-    } finally {
-      this.loading = false;
-    }
+  backToDashboard() {
+    this.currentView = 'dashboard';
+    this.activeModule = 'sistema';
   }
 }

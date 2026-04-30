@@ -1,0 +1,444 @@
+{
+  "uploads": [
+    {
+      "id": "upload-1777563347907-z7gy4yt5k",
+      "fileName": "MARIA DE LOS ANGELES MONTERROSO.xlsx",
+      "uploadedAt": "2026-04-30T15:35:47.600Z",
+      "mode": "merge",
+      "entryCount": 15,
+      "entries": [
+        {
+          "id": "id-1777563347600-arzkr3mhy",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-01T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 2
+        },
+        {
+          "id": "id-1777563347600-eugfa2t0y",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-10T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Edge"
+          ],
+          "sourceRow": 3
+        },
+        {
+          "id": "id-1777563347600-ibedgcw20",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-20T06:00:00.000Z",
+          "endDate": "2026-04-20T06:00:00.000Z",
+          "completedDate": "2026-04-20T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [],
+          "sourceRow": 4
+        },
+        {
+          "id": "id-1777563347600-j707sta2a",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-21T06:00:00.000Z",
+          "endDate": "2026-04-22T06:00:00.000Z",
+          "completedDate": "2026-04-22T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 5
+        },
+        {
+          "id": "id-1777563347600-5amgm58cx",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-20T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 6
+        },
+        {
+          "id": "id-1777563347600-4wyuddapb",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-24T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 7
+        },
+        {
+          "id": "id-1777563347600-7u44tw0xm",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-13T06:00:00.000Z",
+          "endDate": "2026-04-22T06:00:00.000Z",
+          "completedDate": "2026-04-16T06:00:00.000Z",
+          "storyPoints": 5,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Videos"
+          ],
+          "sourceRow": 8
+        },
+        {
+          "id": "id-1777563347600-nvzj1s1sz",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-08T06:00:00.000Z",
+          "endDate": "2026-04-09T06:00:00.000Z",
+          "completedDate": "2026-04-08T06:00:00.000Z",
+          "storyPoints": 5,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 9
+        },
+        {
+          "id": "id-1777563347600-d3368a94u",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-13T06:00:00.000Z",
+          "endDate": "2026-04-13T06:00:00.000Z",
+          "completedDate": "2026-04-13T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 10
+        },
+        {
+          "id": "id-1777563347600-lhqb6rl0m",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-08T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 11
+        },
+        {
+          "id": "id-1777563347600-37hxe3gwy",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": "2026-04-08T06:00:00.000Z",
+          "endDate": "2026-04-10T06:00:00.000Z",
+          "completedDate": "2026-04-10T06:00:00.000Z",
+          "storyPoints": 13,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Videos"
+          ],
+          "sourceRow": 12
+        },
+        {
+          "id": "id-1777563347600-exemw5sqh",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-14T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 13
+        },
+        {
+          "id": "id-1777563347600-aoqokx7r7",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-09T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 14
+        },
+        {
+          "id": "id-1777563347600-dnreisc6j",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-07T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [],
+          "sourceRow": 15
+        },
+        {
+          "id": "id-1777563347600-x8k484pma",
+          "person": "Maria Monterroso",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-28T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 16
+        }
+      ]
+    },
+    {
+      "id": "upload-1777563284473-7hd1cei40",
+      "fileName": "JOSE SUNUM.xlsx",
+      "uploadedAt": "2026-04-30T15:34:44.225Z",
+      "mode": "merge",
+      "entryCount": 14,
+      "entries": [
+        {
+          "id": "id-1777563284225-p1zmchrf4",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-07T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 2
+        },
+        {
+          "id": "id-1777563284225-dyzzvizyn",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-13T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [],
+          "sourceRow": 3
+        },
+        {
+          "id": "id-1777563284225-byvvgr4fj",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-23T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 4
+        },
+        {
+          "id": "id-1777563284225-d0jzyj6h5",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-08T06:00:00.000Z",
+          "endDate": "2026-04-10T06:00:00.000Z",
+          "completedDate": "2026-04-13T06:00:00.000Z",
+          "storyPoints": 13,
+          "completedTasks": 1,
+          "lateTasks": 1,
+          "tags": [
+            "Videos"
+          ],
+          "sourceRow": 5
+        },
+        {
+          "id": "id-1777563284225-xj7grt8ee",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-08T06:00:00.000Z",
+          "endDate": "2026-04-09T06:00:00.000Z",
+          "completedDate": "2026-04-08T06:00:00.000Z",
+          "storyPoints": 5,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 6
+        },
+        {
+          "id": "id-1777563284225-qe7vwlvk8",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-13T06:00:00.000Z",
+          "endDate": "2026-04-22T06:00:00.000Z",
+          "completedDate": "2026-04-21T06:00:00.000Z",
+          "storyPoints": 5,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Videos"
+          ],
+          "sourceRow": 7
+        },
+        {
+          "id": "id-1777563284225-log1jhjik",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-13T06:00:00.000Z",
+          "endDate": "2026-04-14T06:00:00.000Z",
+          "completedDate": "2026-04-15T06:00:00.000Z",
+          "storyPoints": 5,
+          "completedTasks": 1,
+          "lateTasks": 1,
+          "tags": [
+            "Diseño",
+            "Presentacion"
+          ],
+          "sourceRow": 8
+        },
+        {
+          "id": "id-1777563284225-q4ueffcks",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-09T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 9
+        },
+        {
+          "id": "id-1777563284225-hx1zpml1r",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": null,
+          "completedDate": "2026-04-09T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 10
+        },
+        {
+          "id": "id-1777563284225-orhkis13t",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-20T06:00:00.000Z",
+          "endDate": "2026-04-20T06:00:00.000Z",
+          "completedDate": "2026-04-21T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 1,
+          "tags": [],
+          "sourceRow": 11
+        },
+        {
+          "id": "id-1777563284225-0kem6r8ho",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-21T06:00:00.000Z",
+          "endDate": "2026-04-21T06:00:00.000Z",
+          "completedDate": "2026-04-23T06:00:00.000Z",
+          "storyPoints": 3,
+          "completedTasks": 1,
+          "lateTasks": 1,
+          "tags": [
+            "Diseño"
+          ],
+          "sourceRow": 12
+        },
+        {
+          "id": "id-1777563284225-upiuvk6pt",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": null,
+          "endDate": "2026-04-03T06:00:00.000Z",
+          "completedDate": "2026-04-07T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 1,
+          "tags": [],
+          "sourceRow": 13
+        },
+        {
+          "id": "id-1777563284225-hp1tq4vip",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-04-30T06:00:00.000Z",
+          "endDate": "2026-04-30T06:00:00.000Z",
+          "completedDate": "2026-04-30T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [],
+          "sourceRow": 14
+        },
+        {
+          "id": "id-1777563284225-4zcfnjx6j",
+          "person": "José David Sunum",
+          "month": "abril de 2026",
+          "startDate": "2026-05-01T06:00:00.000Z",
+          "endDate": "2026-05-01T06:00:00.000Z",
+          "completedDate": "2026-04-30T06:00:00.000Z",
+          "storyPoints": 0,
+          "completedTasks": 1,
+          "lateTasks": 0,
+          "tags": [],
+          "sourceRow": 15
+        }
+      ]
+    }
+  ]
+}

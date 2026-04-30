@@ -1,217 +1,121 @@
 <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-6 md:px-8 md:py-8">
-  <section class="flex flex-col gap-4 rounded-[32px] border border-white/60 bg-white/80 p-6 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur md:p-8">
-    <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-      <div class="space-y-2">
-        <span class="inline-flex w-fit rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700">
-          Image Studio · Angular + Tailwind
-        </span>
-        <div>
-          <h1 class="text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl">Genera imágenes con mejor control visual</h1>
-          <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
-            Aquí el foco es claridad: prompt, estilo, formato, tweaks y referencia visual en un flujo simple.
-          </p>
-        </div>
-      </div>
+  <ng-container *ngIf="currentView === 'image-studio'; else otherViews">
+    <app-image-studio (back)="backToDashboard()"></app-image-studio>
+  </ng-container>
 
-      <div class="flex flex-wrap items-center gap-2">
-        <button type="button" (click)="onModeChange('text-to-image')" [class]="'rounded-full px-4 py-2 text-sm font-medium transition ' + chipClasses(mode === 'text-to-image', 'dark')">
-          Texto a imagen
-        </button>
-        <button type="button" (click)="onModeChange('image-to-image')" [class]="'rounded-full px-4 py-2 text-sm font-medium transition ' + chipClasses(mode === 'image-to-image', 'orange')">
-          Imagen a imagen
-        </button>
-      </div>
-    </div>
+  <ng-template #otherViews>
+    <ng-container *ngIf="currentView === 'resultados-diseno'; else dashboardView">
+      <app-results-design (back)="backToDashboard()"></app-results-design>
+    </ng-container>
+  </ng-template>
 
-    <div *ngIf="notice" class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ notice }}</div>
-    <div *ngIf="error" class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ error }}</div>
-  </section>
-
-  <section class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-    <div class="space-y-6 rounded-[32px] border border-white/60 bg-white/80 p-5 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
-      <label class="block space-y-3">
-        <div class="flex items-center justify-between gap-3">
-          <span class="text-sm font-medium text-slate-700">Prompt principal</span>
-          <span class="text-xs text-slate-400">Ve al punto: sujeto + estilo + fondo + luz + composición</span>
-        </div>
-        <textarea
-          [ngModel]="prompt"
-          (ngModelChange)="onPromptChange($event)"
-          placeholder="Ej. Una banana 3D cartoon, redondeada, brillante, centrada, fondo blanco puro, sombra suave."
-          class="min-h-40 w-full rounded-[28px] border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-900 outline-none transition focus:border-orange-400 focus:bg-white"
-        ></textarea>
-      </label>
-
-      <div class="space-y-3">
-        <div class="text-sm font-medium text-slate-700">Ideas rápidas</div>
-        <div class="flex flex-wrap gap-2">
-          <button
-            *ngFor="let idea of promptIdeas"
-            type="button"
-            (click)="selectIdea(idea)"
-            [attr.aria-pressed]="selectedIdea === idea"
-            [attr.data-state]="selectedIdea === idea ? 'active' : 'inactive'"
-            [class]="'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition duration-150 ' + chipClasses(selectedIdea === idea, 'orange')"
-          >
-            <span [class]="'inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold ' + chipIconClasses(selectedIdea === idea)">✓</span>
-            <span>{{ idea }}</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="grid gap-4 md:grid-cols-2">
-        <div class="space-y-3 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+  <ng-template #dashboardView>
+    <section class="rounded-[36px] border border-white/70 bg-white/85 p-6 shadow-[0_24px_80px_rgba(15,23,42,0.08)] backdrop-blur md:p-8">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="space-y-3">
+          <span class="inline-flex w-fit rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">
+            Dashboard modular · Angular + Tailwind
+          </span>
           <div>
-            <div class="text-sm font-medium text-slate-800">Estilo</div>
-            <div class="text-xs text-slate-500">No lo dejes ambiguo si quieres consistencia.</div>
+            <h1 class="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl">Dashboard de entrada a tus sistemas</h1>
+            <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
+              Cada tarjeta funciona como punto de entrada. Image Studio y Resultados de diseño ya viven en componentes independientes para mantener el sistema escalable.
+            </p>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <button
-              *ngFor="let preset of styles"
-              type="button"
-              (click)="selectStyle(preset)"
-              [attr.aria-pressed]="style === preset"
-              [attr.data-state]="style === preset ? 'active' : 'inactive'"
-              [class]="'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition duration-150 ' + chipClasses(style === preset)"
-            >
-              <span [class]="'inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold ' + chipIconClasses(style === preset)">✓</span>
-              <span>{{ preset }}</span>
-            </button>
-          </div>
-          <p class="text-xs leading-5 text-slate-500">{{ style ? styleDescriptions[style] : 'Sin estilo fijo. Si eliges uno, aquí verás su descripción.' }}</p>
         </div>
 
-        <div class="space-y-3 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-          <div>
-            <div class="text-sm font-medium text-slate-800">Formato</div>
-            <div class="text-xs text-slate-500">Cámbialo antes de generar, no después.</div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Módulos</div>
+            <div class="mt-2 text-2xl font-semibold text-slate-950">{{ activeModuleCount }}</div>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <button
-              *ngFor="let ratio of aspectRatios"
-              type="button"
-              (click)="selectAspectRatio(ratio)"
-              [attr.aria-pressed]="aspectRatio === ratio"
-              [attr.data-state]="aspectRatio === ratio ? 'active' : 'inactive'"
-              [class]="'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition duration-150 ' + chipClasses(aspectRatio === ratio, 'orange')"
-            >
-              <span [class]="'inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold ' + chipIconClasses(aspectRatio === ratio)">✓</span>
-              <span>{{ ratio }}</span>
-            </button>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Activos</div>
+            <div class="mt-2 text-2xl font-semibold text-slate-950">{{ activeStatusCount }}</div>
           </div>
-          <p class="text-xs leading-5 text-slate-500">Para piezas tipo hero usa 16:9. Para assets o iconos, 1:1.</p>
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 col-span-2 sm:col-span-1">
+            <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Contexto</div>
+            <div class="mt-2 text-sm font-semibold text-slate-950">Módulos de sistema</div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="space-y-3 rounded-[28px] border border-dashed border-slate-300 bg-white p-4">
-        <div class="text-sm font-medium text-slate-800">Pulir prompt</div>
-        <div class="flex flex-wrap gap-2">
-          <button
-            *ngFor="let tweak of quickTweaks"
-            type="button"
-            (click)="toggleTweak(tweak)"
-            [attr.aria-pressed]="selectedTweaks.includes(tweak)"
-            [attr.data-state]="selectedTweaks.includes(tweak) ? 'active' : 'inactive'"
-            [class]="'inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium transition duration-150 ' + chipClasses(selectedTweaks.includes(tweak))"
-          >
-            <span class="inline-flex h-4 w-4 items-center justify-center rounded-full border text-[10px] font-bold" [class]="selectedTweaks.includes(tweak) ? 'border-white/70 bg-white/15 text-white' : 'border-slate-300 bg-white text-slate-400'">
-              {{ selectedTweaks.includes(tweak) ? '✓' : '+' }}
-            </span>
-            <span>{{ tweak }}</span>
-          </button>
-        </div>
-        <div class="rounded-2xl bg-slate-50 px-4 py-3 text-xs leading-6 text-slate-600">
-          <span class="font-medium text-slate-800">Prompt enriquecido:</span>
-          {{ enhancedPrompt || 'Todavía vacío' }}
-        </div>
+    <section class="space-y-4">
+      <div>
+        <h2 class="text-lg font-semibold text-slate-950">Módulos del sistema</h2>
+        <p class="text-sm text-slate-500">Launcher principal del proyecto. Los módulos activos ya abren su propia pantalla; los demás quedan listos para crecer.</p>
       </div>
 
-      <div *ngIf="mode === 'image-to-image'" class="space-y-3 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-        <div>
-          <div class="text-sm font-medium text-slate-800">Imagen de referencia</div>
-          <div class="text-xs text-slate-500">Útil para variaciones, remix y dirección visual más controlada.</div>
-        </div>
-
-        <label
-          class="flex min-h-52 cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed px-6 py-8 text-center transition"
-          [class]="isDragActive ? 'flex min-h-52 cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed border-orange-400 bg-orange-50 px-6 py-8 text-center transition' : 'flex min-h-52 cursor-pointer flex-col items-center justify-center rounded-[24px] border border-dashed border-slate-300 bg-white px-6 py-8 text-center transition hover:border-slate-400'"
-          (dragover)="onDragOver($event)"
-          (dragleave)="onDragLeave($event)"
-          (drop)="onDrop($event)"
+      <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <button
+          *ngFor="let module of modules"
+          type="button"
+          (click)="openModule(module.id)"
+          class="group rounded-[28px] border p-5 text-left transition duration-200"
+          [class]="moduleCardClasses(module.id)"
         >
-          <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" (change)="onFileInput($event)">
-          <div class="mb-3 text-3xl">⬆️</div>
-          <p class="text-sm font-medium text-slate-700">Arrastra una imagen o haz click para subirla</p>
-          <p class="mt-1 text-xs text-slate-500">PNG, JPG, WEBP · una imagen</p>
-        </label>
-
-        <img *ngIf="referencePreview" [src]="referencePreview" alt="Vista previa" class="h-64 w-full rounded-[24px] object-cover">
-      </div>
-
-      <div class="flex flex-wrap items-center gap-3">
-        <button type="button" (click)="handleGenerate()" [disabled]="!canSubmit || loading" class="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
-          <span>{{ loading ? '⏳' : '✨' }}</span>
-          <span>{{ loading ? 'Generando...' : 'Generar imagen' }}</span>
-        </button>
-        <button type="button" (click)="copyPrompt()" class="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">Copiar prompt</button>
-        <button type="button" (click)="clearAll()" class="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">Limpiar</button>
-      </div>
-    </div>
-
-    <div class="space-y-6">
-      <section class="rounded-[32px] border border-white/60 bg-white/80 p-5 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
-        <div class="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 class="text-lg font-semibold text-slate-900">Resultado</h2>
-            <p class="text-sm text-slate-500">Aquí se ve la salida generada.</p>
-          </div>
-          <button *ngIf="result" type="button" (click)="downloadResult()" class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50">Descargar</button>
-        </div>
-
-        <div *ngIf="result; else emptyState" class="space-y-4">
-          <img [src]="result!.imageUrl" alt="Resultado generado" class="w-full rounded-[24px] border border-slate-200 bg-slate-50 object-cover">
-          <div class="rounded-2xl bg-slate-50 px-4 py-3 text-xs leading-6 text-slate-600">
-            <div><span class="font-medium text-slate-800">Provider:</span> {{ result!.provider }}</div>
-            <div><span class="font-medium text-slate-800">Model:</span> {{ result!.model }}</div>
-            <div *ngIf="result!.promptUsed"><span class="font-medium text-slate-800">Prompt usado:</span> {{ result!.promptUsed }}</div>
-          </div>
-        </div>
-
-        <ng-template #emptyState>
-          <div class="flex min-h-80 items-center justify-center rounded-[24px] border border-dashed border-slate-300 bg-slate-50 px-6 text-center text-sm text-slate-500">
-            Todavía no hay imagen generada.
-          </div>
-        </ng-template>
-      </section>
-
-      <section class="rounded-[32px] border border-white/60 bg-white/80 p-5 shadow-[0_20px_70px_rgba(15,23,42,0.08)] backdrop-blur md:p-6">
-        <div class="mb-4 flex items-center gap-2">
-          <span class="text-lg">🕘</span>
-          <div>
-            <h2 class="text-lg font-semibold text-slate-900">Historial</h2>
-            <p class="text-sm text-slate-500">Tus últimas generaciones útiles.</p>
-          </div>
-        </div>
-
-        <div *ngIf="history.length; else emptyHistory" class="space-y-3">
-          <button
-            *ngFor="let item of history"
-            type="button"
-            (click)="reuseHistory(item)"
-            class="flex w-full items-start gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-left transition hover:border-slate-300 hover:bg-slate-50"
-          >
-            <img [src]="item.imageUrl" alt="Miniatura" class="h-16 w-16 rounded-xl object-cover">
-            <div class="min-w-0 flex-1">
-              <div class="truncate text-sm font-medium text-slate-800">{{ item.prompt }}</div>
-              <div class="mt-1 text-[11px] text-slate-400">{{ item.style }} · {{ item.aspectRatio }}</div>
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br text-2xl shadow-sm"
+                [class]="module.id === activeModule ? 'from-white/20 to-white/5 text-white' : module.accent + ' text-slate-900'">
+              {{ module.icon }}
             </div>
-          </button>
-        </div>
+            <span class="rounded-full border px-2.5 py-1 text-[11px] font-medium"
+                  [class]="module.id === activeModule ? 'border-white/20 bg-white/10 text-white' : moduleStatusClasses(module.status)">
+              {{ module.status }}
+            </span>
+          </div>
 
-        <ng-template #emptyHistory>
-          <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">Aún no hay historial.</div>
-        </ng-template>
-      </section>
-    </div>
-  </section>
+          <div class="mt-5 space-y-2">
+            <div class="text-[11px] font-medium uppercase tracking-[0.14em]"
+                [class]="module.id === activeModule ? 'text-white/60' : 'text-slate-400'">
+              {{ module.metric }}
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold" [class]="module.id === activeModule ? 'text-white' : 'text-slate-950'">{{ module.name }}</h3>
+              <p class="text-sm font-medium" [class]="module.id === activeModule ? 'text-white/70' : 'text-slate-500'">{{ module.subtitle }}</p>
+            </div>
+            <p class="text-sm leading-6" [class]="module.id === activeModule ? 'text-white/80' : 'text-slate-600'">
+              {{ module.description }}
+            </p>
+          </div>
+
+          <div class="mt-5 flex items-center justify-between text-xs"
+              [class]="module.id === activeModule ? 'text-white/60' : 'text-slate-400'">
+            <span>{{ module.updatedLabel }}</span>
+            <span class="font-medium">Entrar →</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <section class="rounded-[32px] border border-white/70 bg-white/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+      <div class="mb-6 flex flex-col gap-4 border-b border-slate-100 pb-5 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div class="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-400">Módulo seleccionado</div>
+          <h2 class="mt-2 text-2xl font-semibold text-slate-950">{{ activeModuleData.name }}</h2>
+          <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-600">{{ activeModuleData.description }}</p>
+        </div>
+        <span class="inline-flex w-fit rounded-full border px-3 py-1 text-xs font-medium" [class]="moduleStatusClasses(activeModuleData.status)">
+          {{ activeModuleData.status }}
+        </span>
+      </div>
+
+      <div class="rounded-[28px] border border-dashed border-slate-200 bg-slate-50 p-6">
+        <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div class="max-w-2xl">
+            <div class="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">{{ activeModuleData.icon }}</div>
+            <h3 class="mt-4 text-xl font-semibold text-slate-950">{{ activeModuleData.name }}</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600">
+              {{ activeModuleData.id === 'image-studio' || activeModuleData.id === 'resultados-diseno' ? 'Este módulo ya se abre como componente independiente para aislar su lógica y mantener el dashboard limpio.' : 'Este espacio queda como placeholder para construir la funcionalidad futura del módulo.' }}
+            </p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+            <div class="font-medium text-slate-900">Siguiente acción</div>
+            <div class="mt-2">{{ activeModuleData.id === 'image-studio' || activeModuleData.id === 'resultados-diseno' ? 'Haz click en la tarjeta del módulo para entrar a su pantalla completa.' : 'Definir navegación interna, tabla o board cuando desarrolles este módulo.' }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-template>
 </main>
