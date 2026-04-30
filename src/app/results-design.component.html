@@ -106,16 +106,23 @@
             <div class="text-sm text-slate-600">Vista: <span class="font-medium text-slate-950">{{ currentPersonLabel }}</span></div>
           </div>
 
-          <div class="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-[1fr_180px_180px]">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+          <div class=" mt-5 grid col-span-1 ">
+            <div class="col-span-1 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
               Filtra el bloque por un período específico sin mezclar meses.
             </div>
-            <select [ngModel]="selectedMonth" (ngModelChange)="onMonthChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400">
-              <option *ngFor="let month of monthOptions" [ngValue]="month.value">{{ month.label }}</option>
-            </select>
-            <select [ngModel]="selectedYear" (ngModelChange)="onYearChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400">
-              <option *ngFor="let year of availableYears" [ngValue]="year">{{ year }}</option>
-            </select>
+            <div class="grid grid-cols-2">
+              <div class="p-2">
+                  <select [ngModel]="selectedMonth" (ngModelChange)="onMonthChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 w-full">
+                <option *ngFor="let month of monthOptions" [ngValue]="month.value">{{ month.label }}</option>
+              </select>
+              </div>
+             <div class="p-2">
+              <select [ngModel]="selectedYear" (ngModelChange)="onYearChange($event)" class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 w-full">
+                <option *ngFor="let year of availableYears" [ngValue]="year">{{ year }}</option>
+              </select>
+             </div>
+            </div>
+           
           </div>
 
           <div *ngIf="periodSummary; else emptyHistory" class="mt-5 space-y-3">
