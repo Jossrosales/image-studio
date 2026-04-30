@@ -355,8 +355,8 @@ export class ResultsDesignComponent {
       }
 
       const nextEntries: DesignResultEntry[] = rows
-        .map((row, index) => this.mapRowToEntry(row, index))
-        .filter((entry): entry is DesignResultEntry => entry !== null);
+        .map((row: ParsedRow, index: number) => this.mapRowToEntry(row, index))
+        .filter((entry: DesignResultEntry | null): entry is DesignResultEntry => entry !== null);
 
       if (!nextEntries.length) {
         throw new Error('No pude mapear columnas válidas. Ahora necesito: fecha inicio, fecha fin, persona, fecha completada, tags y story points.');
